@@ -5,41 +5,315 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4th Grade ELA: Text Features Explorers</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 20px; background-color: #f4f6f9; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .slide-title { color: #1e3a8a; font-size: 28px; font-weight: bold; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px; }
-        .phonics { font-weight: bold; color: #b91c1c; background: #fee2e2; padding: 2px 6px; border-radius: 4px; }
-        .sign-container { display: flex; align-items: center; gap: 20px; margin-top: 20px; }
-        .deer-sign { width: 120px; height: 120px; background: #facc15; border: 4px solid #000; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; border-radius: 8px; box-shadow: 3px 3px 5px rgba(0,0,0,0.2); }
-        .deer-icon { transform: rotate(-45deg); font-size: 50px; }
-        .content-box { border: 2px solid #e2e8f0; border-radius: 8px; padding: 20px; background: #fafafa; }
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #eff6ff;
+            --accent: #b91c1c;
+            --accent-bg: #fee2e2;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .deck-container {
+            width: 90%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            flex-grow: 1;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            color: #334155;
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        .content-box {
+            background-color: var(--primary-light);
+            border-left: 5px solid var(--primary);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+
+        /* Vocabulary Styling */
+        .vocab-item {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .vocab-word {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .phonics {
+            font-weight: bold;
+            color: var(--accent);
+            background-color: var(--accent-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* Layout Layout Fix for Side-by-Side Content */
+        .split-layout {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .split-text {
+            flex: 2;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .split-image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Cleaned Up Deer Sign Asset */
+        .deer-sign {
+            width: 140px;
+            height: 140px;
+            background-color: #facc15;
+            border: 5px solid #0f172a;
+            border-radius: 12px;
+            transform: rotate(45deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .deer-icon {
+            transform: rotate(-45deg);
+            font-size: 70px;
+            user-select: none;
+        }
+
+        /* Navigation Buttons Layout */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        button:disabled {
+            background-color: var(--border);
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            font-size: 0.95rem;
+            color: #64748b;
+            align-self: center;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="slide-title">4TH GRADE ELA: TEXT FEATURES EXPLORERS</div>
-        
-        <h2>Slide 4: Vocabulary</h2>
-        <div class="content-box">
-            <p><strong>Heading</strong> <span class="phonics">[hed-ing]</span> - Tells you what the next section is about.</p>
-            <p><strong>Caption</strong> <span class="phonics">[kap-shuhn]</span> - Explains what is happening in a picture.</p>
-            <p><strong>Diagram</strong> <span class="phonics">[dahy-uh-gram]</span> - A drawing that explains how something works.</p>
+
+    <div class="deck-container">
+        <!-- Slide 1: Welcome -->
+        <div class="slide active">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Welcome, Explorers!</h2>
+            <div class="content-box">
+                Today, we are going to dive deep into books, articles, and logs to uncover non-fiction tools known as <strong>Text Features</strong>! Get ready to use your developer skills to scan documents like a true professional.
+            </div>
         </div>
 
-        <br><hr><br>
+        <!-- Slide 2: What are Text Features? -->
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>What are Text Features?</h2>
+            <div class="content-box">
+                Text features are all the components of a story or article that are not the main body of text. They help your brain organize information, preview concepts, and navigate complex text smoothly!
+            </div>
+        </div>
 
-        <h2>Slide 11: Family Support &amp; Practice Ideas</h2>
-        <div class="content-box">
-            <h3>Conversation Starters</h3>
-            <div class="sign-container">
-                <div class="deer-sign">
-                    <div class="deer-icon">🦌</div>
+        <!-- Slide 3: The Explorer Toolkit -->
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>The Explorer Toolkit</h2>
+            <div class="content-box">
+                Think of text features as structural signposts. Just like a map needs legends, scales, and labels, an informational text needs titles, headings, sidebars, and captions to guide its audience.
+            </div>
+        </div>
+
+        <!-- Slide 4: Vocabulary -->
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Slide 4: Vocabulary</h2>
+            <div class="content-box">
+                <div class="vocab-item">
+                    <span class="vocab-word">Heading</span> <span class="phonics">[hed-ing]</span> - Tells you what the next section is about.
                 </div>
-                <div>
-                    <p>Look at the deer on the street sign! It helps you know a real deer might be nearby before you even see it. Headings do the exact same thing! They act like street signs for your eyes, telling you what topic is coming up next in your book.</p>
+                <div class="vocab-item">
+                    <span class="vocab-word">Caption</span> <span class="phonics">[kap-shuhn]</span> - Explains what is happening in a picture.
+                </div>
+                <div class="vocab-item">
+                    <span class="vocab-word">Diagram</span> <span class="phonics">[dahy-uh-gram]</span> - A drawing that explains how something works.
                 </div>
             </div>
         </div>
+
+        <!-- Slides 5 to 10: Placeholder content to keep structure intact -->
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Slide 5: Guided Practice</h2>
+            <div class="content-box">Let's look closely at a text sample together. Can you find the major title at the top of the page? What hints does it give you?</div>
+        </div>
+        
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Slide 6: Captions in Action</h2>
+            <div class="content-box">Look at an illustration or photograph. The short text blocks sitting right beneath or beside them are the captions, providing vital context.</div>
+        </div>
+
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Slide 7: Reading Diagrams</h2>
+            <div class="content-box">Diagrams break down pieces of a machine, parts of an animal, or steps in a lifecycle with clear, specific arrows and structural text callouts.</div>
+        </div>
+
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Slide 8: Interactive Mission</h2>
+            <div class="content-box">Time to test your knowledge! Drag the text feature flags to their correct locations on your virtual blueprint.</div>
+        </div>
+
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Slide 9: Structural Checkpoint</h2>
+            <div class="content-box">Reviewing our terms: Headings break up long blocks, captions detail visual images, and diagrams map out complex systems.</div>
+        </div>
+
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Slide 10: Final Independent Review</h2>
+            <div class="content-box">Complete your explorer log by matching the 3 primary architectural text layout features with their accurate foundational descriptions.</div>
+        </div>
+
+        <!-- Slide 11: Family Support & Practice Ideas -->
+        <div class="slide">
+            <h1>4th Grade ELA: Text Features Explorers</h1>
+            <h2>Slide 11: Family Support & Practice Ideas</h2>
+            
+            <div class="split-layout">
+                <div class="split-text">
+                    <h3>Conversation Starters</h3>
+                    <p>Look at the deer on the street sign! It helps you know a real deer might be nearby before you even see it. Headings do the exact same thing! They act like street signs for your eyes, telling you what topic is coming up next in your book.</p>
+                </div>
+                <div class="split-image-container">
+                    <div class="deer-sign">
+                        <div class="deer-icon">🦌</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation System Layout -->
+        <div class="controls">
+            <button id="prevBtn" onclick="changeSlide(-1)" disabled>Previous</button>
+            <span class="slide-number" id="slideNum">Slide 1 of 11</span>
+            <button id="nextBtn" onclick="changeSlide(1)">Next</button>
+        </div>
     </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideNum = document.getElementById('slideNum');
+
+        function changeSlide(direction) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide += direction;
+            slides[currentSlide].classList.add('active');
+
+            // Button Control Updates
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            
+            // Text Indicator Updates
+            slideNum.textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+        }
+    </script>
 </body>
 </html>
